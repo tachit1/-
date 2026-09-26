@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ภารกิจชีวิตของผีเสื้อ 🦋</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  overflow:hidden;
+  font-family:system-ui,"Noto Sans Thai",sans-serif;
+  background:#bfe9ff;
+  color:#24352b;
+}
+.scene{
+  position:relative;
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  background:
+    linear-gradient(#bfe9ff 0 55%,#a9dd8a 55% 100%);
+}
+.sun{
+  position:absolute;
+  width:110px;height:110px;
+  right:8%;top:7%;
+  border-radius:50%;
+  background:#ffe58a;
+  box-shadow:0 0 45px #fff1a8;
+}
+.cloud{
+  position:absolute;
+  width:180px;height:55px;
+  border-radius:60px;
+  background:rgba(255,255,255,.8);
+}
+.cloud:before,.cloud:after{
+  content:"";position:absolute;
+  background:inherit;border-radius:50%;
+}
+.cloud:before{width:70px;height:70px;left:28px;top:-30px}
+.cloud:after{width:85px;height:85px;right:25px;top:-42px}
+.c1{left:7%;top:13%;transform:scale(.8)}
+.c2{left:42%;top:23%;transform:scale(.55)}
+
+.hill{
+  position:absolute;
+  bottom:26%;
+  width:70vw;height:28vh;
+  border-radius:50% 50% 0 0;
+  background:#8dcc70;
+}
+.h1{left:-15%}.h2{right:-20%;background:#7fbd68}
+
+.ground{
+  position:absolute;
+  left:0;right:0;bottom:0;height:30%;
+  background:#76b95d;
+}
+.grass{
+  position:absolute;bottom:27%;
+  width:100%;height:18px;
+  background:repeating-linear-gradient(115deg,transparent 0 15px,#4d9c50 16px 19px,transparent 20px 34px);
+  opacity:.7;
+}
+
+.title{
+  position:absolute;
+  top:5%;
+  left:50%;
+  transform:translateX(-50%);
+  text-align:center;
+  z-index:5;
+}
+.title .tag{
+  display:inline-block;
+  padding:7px 16px;
+  border-radius:30px;
+  background:rgba(255,255,255,.8);
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+.title h1{
+  margin:10px 0 4px;
+  font-size:clamp(30px,4vw,52px);
+  text-shadow:0 3px 0 rgba(255,255,255,.7);
+}
+.title p{margin:0;font-size:16px}
+
+.flower{
+  position:absolute;
+  z-index:2;
+  bottom:22%;
+  font-size:clamp(38px,5vw,65px);
+  filter:drop-shadow(0 4px 2px rgba(0,0,0,.12));
+}
+.f1{left:12%}.f2{left:28%;bottom:19%}.f3{right:16%;bottom:20%}.f4{right:31%;bottom:25%}
+
+.leaf{
+  position:absolute;
+  z-index:2;
+  bottom:27%;
+  width:150px;height:65px;
+  background:#4f9f54;
+  border-radius:100% 0 100% 0;
+  transform:rotate(-15deg);
+}
+.l1{left:18%}.l2{right:10%;transform:rotate(25deg) scale(.8)}
+
+.butterfly{
+  position:absolute;
+  z-index:4;
+  font-size:clamp(58px,7vw,92px);
+  user-select:none;
+  animation:float 3s ease-in-out infinite;
+  filter:drop-shadow(0 7px 5px rgba(0,0,0,.18));
+}
+.boy{left:23%;top:43%;animation-delay:-1s}
+.girl{right:23%;top:48%;animation-delay:-2s}
+@keyframes float{
+  0%,100%{transform:translateY(0) rotate(-3deg)}
+  50%{transform:translateY(-18px) rotate(3deg)}
+}
+
+.info{
+  position:absolute;
+  z-index:6;
+  left:50%;
+  bottom:5%;
+  transform:translateX(-50%);
+  width:min(680px,90vw);
+  padding:18px 22px;
+  border-radius:22px;
+  background:rgba(255,255,255,.9);
+  box-shadow:0 12px 35px rgba(36,80,40,.18);
+  text-align:center;
+  backdrop-filter:blur(8px);
+}
+.info strong{font-size:20px}
+.info p{margin:5px 0 0;font-size:15px}
+.badge{
+  position:absolute;
+  z-index:6;
+  top:25px;left:25px;
+  padding:10px 15px;
+  border-radius:15px;
+  background:rgba(255,255,255,.85);
+  font-weight:800;
+}
+
+.route{
+  position:absolute;
+  z-index:3;
+  inset:25% 12% 27% 12%;
+  width:76%;height:48%;
+  overflow:visible;
+  pointer-events:none;
+}
+.route path{
+  fill:none;
+  stroke:rgba(255,255,255,.9);
+  stroke-width:1.5;
+  stroke-dasharray:3 2;
+  stroke-linecap:round;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.12));
+}
+.goal{
+  position:absolute;
+  z-index:3;
+  right:18%;
+  top:42%;
+  padding:8px 13px;
+  border-radius:20px;
+  background:rgba(255,255,255,.82);
+  font-weight:800;
+  font-size:14px;
+  animation:pulse 1.6s ease-in-out infinite;
+}
+.draggable{
+  cursor:grab;
+  touch-action:none;
+  z-index:10;
+}
+.draggable.dragging{cursor:grabbing;animation:none}
+@keyframes pulse{
+  50%{transform:scale(1.08)}
+}
+.mission-panel{
+  position:absolute;
+  z-index:12;
+  top:24px;
+  right:25px;
+  width:min(310px,35vw);
+  padding:15px 17px;
+  border-radius:18px;
+  background:rgba(255,255,255,.9);
+  box-shadow:0 10px 28px rgba(36,80,40,.15);
+}
+.mission-panel strong{font-size:17px}
+.mission-panel p{margin:5px 0 10px;font-size:14px}
+.progress{
+  height:8px;
+  border-radius:20px;
+  overflow:hidden;
+  background:#dce8d8;
+}
+.progress span{
+  display:block;
+  width:0%;
+  height:100%;
+  border-radius:20px;
+  background:#65ad58;
+  transition:width .15s;
+}
+.success-panel{
+  display:none;
+  position:absolute;
+  z-index:20;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(420px,86vw);
+  padding:28px;
+  border-radius:28px;
+  background:rgba(255,255,255,.96);
+  box-shadow:0 20px 60px rgba(25,70,30,.28);
+  text-align:center;
+}
+.success-panel.show{display:block;animation:pop .35s ease-out}
+.success-panel div{font-size:42px}
+.success-panel strong{font-size:28px}
+.success-panel p{margin:8px 0 18px}
+.success-panel button{
+  border:0;
+  padding:13px 22px;
+  border-radius:14px;
+  background:#62a957;
+  color:white;
+  font-weight:800;
+  font-size:16px;
+  cursor:pointer;
+}
+@keyframes pop{
+  from{opacity:0;transform:translate(-50%,-50%) scale(.8)}
+  to{opacity:1;transform:translate(-50%,-50%) scale(1)}
+}
+@media(max-width:700px){
+  .mission-panel{top:auto;bottom:18%;right:5%;width:90%}
+  .info{display:none}
+  .boy{left:15%;top:44%}.girl{right:15%;top:49%}
+  .route{inset:30% 7% 30% 7%;width:86%;height:40%}
+}
+
+
+.scene2{display:none;position:fixed;inset:0;background:linear-gradient(135deg,#f6f0ff,#eef9ff);padding:28px;overflow:auto}
+.scene2.show{display:block;animation:fadeIn .45s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.repro-wrap{max-width:920px;margin:0 auto}
+.repro-card{background:#fff;border-radius:24px;padding:28px;box-shadow:0 16px 45px rgba(60,40,100,.12)}
+.repro-title{text-align:center;margin-bottom:20px}.repro-title h2{margin:8px 0 5px}.repro-title p{margin:0;color:#667085}
+.bio-box{background:#f4f0ff;border:2px solid #ded2ff;border-radius:18px;padding:18px;margin:18px 0}
+.bio-box strong{color:#5b3bb5}.bio-box p{margin:8px 0 0;line-height:1.65}
+.choice-title{font-weight:800;margin:22px 0 12px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.choice{border:2px solid #e5e7eb;background:#fff;border-radius:16px;padding:16px;text-align:left;cursor:pointer;font:inherit;transition:.2s;position:relative}
+.choice:hover{transform:translateY(-2px);border-color:#a78bfa;box-shadow:0 8px 20px rgba(90,60,160,.1)}
+.choice.correct{border-color:#22c55e;background:#effdf4}.choice.wrong{border-color:#ef4444;background:#fff1f2}
+.choice .mark{position:absolute;right:12px;top:10px;font-size:22px;display:none}.choice.correct .mark,.choice.wrong .mark{display:block}
+.feedback{text-align:center;font-weight:800;min-height:30px;margin:14px 0}.feedback.ok{color:#16a34a}.feedback.bad{color:#dc2626}
+.continue-btn{display:none;margin:10px auto 0;border:0;border-radius:14px;padding:13px 22px;background:#6d4aff;color:white;font-weight:800;cursor:pointer}.continue-btn.show{display:block}
+.mini-animation{height:130px;border-radius:18px;background:linear-gradient(135deg,#fff7ed,#f0fdf4);display:flex;align-items:center;justify-content:center;gap:55px;position:relative;overflow:hidden;margin:18px 0}
+.butterfly-icon{font-size:55px;animation:float 2s ease-in-out infinite}.butterfly-icon:last-child{animation-delay:.4s}@keyframes float{50%{transform:translateY(-7px)}}
+.arrow{font-size:30px;color:#8b5cf6;font-weight:900}
+@media(max-width:650px){.choices{grid-template-columns:1fr}.scene2{padding:16px}}
+
+.scene3{display:none;position:fixed;inset:0;background:linear-gradient(135deg,#effbea,#fff9e8);padding:28px;overflow:auto;z-index:50}
+.scene3.show{display:block;animation:fadeIn .45s ease}
+.egg-wrap{max-width:920px;margin:0 auto}.egg-card{background:#fff;border-radius:24px;padding:28px;box-shadow:0 16px 45px rgba(60,80,40,.14)}
+.egg-title{text-align:center;margin-bottom:18px}.egg-title h2{margin:8px 0 5px}.egg-title p{margin:0;color:#667085}
+.egg-scene-art{height:170px;border-radius:20px;background:linear-gradient(#cfeeff 0 55%,#9bd47c 55%);position:relative;overflow:hidden;margin:18px 0}
+.leaf-art{position:absolute;left:20%;bottom:12px;font-size:105px;transform:rotate(-8deg)}
+.butterfly-art{position:absolute;left:42%;top:22px;font-size:62px;animation:float 2s ease-in-out infinite}
+.egg-cluster{position:absolute;left:28%;bottom:52px;font-size:26px;letter-spacing:-5px;opacity:0;transform:scale(.6)}
+.egg-cluster.show{animation:eggPop .7s ease forwards}
+@keyframes eggPop{0%{opacity:0;transform:scale(.6)}70%{opacity:1;transform:scale(1.15)}100%{opacity:1;transform:scale(1)}}
+.egg-info{background:#f1faed;border:2px solid #d2ebc9;border-radius:18px;padding:17px;margin:18px 0}.egg-info strong{color:#397a32}.egg-info p{margin:8px 0 0;line-height:1.65}
+@media(max-width:650px){.scene3{padding:16px}.egg-card{padding:20px}.egg-scene-art{height:145px}.leaf-art{left:10%;font-size:85px}.butterfly-art{left:40%;font-size:52px}.egg-cluster{left:18%}}
+.scene4{display:none;position:fixed;inset:0;background:linear-gradient(135deg,#fff9e8,#eefbea);padding:28px;overflow:auto;z-index:60}.scene4.show{display:block;animation:fadeIn .45s ease}.larva-wrap{max-width:920px;margin:0 auto}.larva-card{background:#fff;border-radius:24px;padding:28px;box-shadow:0 16px 45px rgba(60,80,40,.14)}.larva-title{text-align:center}.larva-title h2{margin:8px 0 5px}.larva-title p{margin:0;color:#667085}.hatch-art{height:180px;margin:18px 0;border-radius:20px;background:linear-gradient(#cfeeff 0 55%,#9bd47c 55%);position:relative;overflow:hidden}.plant{position:absolute;left:15%;bottom:5px;font-size:110px}.egg4{position:absolute;left:47%;top:45px;font-size:64px;transition:.5s}.egg4.hatch{animation:shakeEgg .7s ease forwards}.caterpillar4{position:absolute;left:51%;top:75px;font-size:60px;opacity:0;transform:scale(.4)}.caterpillar4.show{animation:crawlIn .7s ease forwards}@keyframes shakeEgg{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}75%{transform:rotate(-7deg)}to{opacity:.25;transform:scale(.75)}}@keyframes crawlIn{to{opacity:1;transform:scale(1) translateX(35px)}}.larva-info{background:#f1faed;border:2px solid #d2ebc9;border-radius:18px;padding:17px;margin:18px 0}.larva-info strong{color:#397a32}.larva-info p{margin:8px 0 0;line-height:1.65}@media(max-width:650px){.scene4{padding:16px}.larva-card{padding:20px}.hatch-art{height:150px}.plant{font-size:85px;left:7%}.egg4{left:42%}.caterpillar4{left:46%}}
+
+.scene5{display:none;position:fixed;inset:0;background:linear-gradient(135deg,#eefbea,#fff9e8);padding:28px;overflow:auto;z-index:70}
+.scene5.show{display:block;animation:fadeIn .45s ease}
+.feed-wrap{max-width:920px;margin:0 auto}
+.feed-card{background:#fff;border-radius:24px;padding:28px;box-shadow:0 16px 45px rgba(60,80,40,.14)}
+.feed-title{text-align:center}.feed-title h2{margin:8px 0 5px}.feed-title p{margin:0;color:#667085}
+.feed-art{height:190px;margin:18px 0;border-radius:20px;background:linear-gradient(#cfeeff 0 55%,#9bd47c 55%);position:relative;overflow:hidden}
+.feed-plant{position:absolute;left:10%;bottom:0;font-size:120px}
+.leaf-btn{position:absolute;font-size:44px;background:none;border:0;cursor:pointer;transition:.2s;filter:drop-shadow(0 3px 3px rgba(0,0,0,.15))}
+.leaf-btn:hover{transform:scale(1.15) rotate(-6deg)}
+.leaf-btn:disabled{opacity:.25;cursor:default;transform:none}
+.leaf-btn.lb1{left:30%;top:25px}
+.leaf-btn.lb2{left:38%;top:70px}
+.leaf-btn.lb3{left:24%;top:95px}
+.cat5{position:absolute;left:58%;bottom:30px;font-size:50px;transition:transform .35s ease, left .35s ease;transform-origin:bottom left}
+.cat5.eat{animation:nomnom .35s ease}
+@keyframes nomnom{0%,100%{transform:scale(var(--sc,1)) rotate(0)}50%{transform:scale(var(--sc,1)) rotate(-8deg)}}
+.full-badge{position:absolute;right:5%;top:14px;padding:7px 13px;border-radius:20px;background:rgba(255,255,255,.88);font-weight:800;font-size:14px}
+.feed-progress-wrap{margin:14px 0}
+.feed-progress-wrap .label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#397a32;margin-bottom:6px}
+.feed-quiz{display:none}
+.feed-quiz.show{display:block;animation:fadeIn .4s ease}
+@media(max-width:650px){.scene5{padding:16px}.feed-card{padding:20px}.feed-art{height:160px}.feed-plant{font-size:95px;left:5%}.cat5{left:52%}.leaf-btn{font-size:36px}}
+
+.scene6{display:none;position:fixed;inset:0;background:linear-gradient(135deg,#fff3e6,#eefbea);padding:28px;overflow:auto;z-index:80}
+.scene6.show{display:block;animation:fadeIn .45s ease}
+.pupa-wrap{max-width:920px;margin:0 auto}
+.pupa-card{background:#fff;border-radius:24px;padding:28px;box-shadow:0 16px 45px rgba(80,60,20,.14)}
+.pupa-title{text-align:center}.pupa-title h2{margin:8px 0 5px}.pupa-title p{margin:0;color:#667085}
+.pupa-art{height:190px;margin:18px 0;border-radius:20px;background:linear-gradient(#cfeeff 0 60%,#9bd47c 60%);position:relative;overflow:hidden}
+.branch{position:absolute;top:38px;left:10%;width:80%;height:10px;background:#8a5a2b;border-radius:6px}
+.cat6{position:absolute;top:46px;left:46%;font-size:46px;transition:opacity .6s ease, transform .6s ease}
+.cat6.hide{opacity:0;transform:scale(.3) translateY(10px)}
+.chrysalis6{position:absolute;top:46px;left:47%;width:34px;height:62px;border-radius:45% 45% 40% 40%/55% 55% 45% 45%;background:linear-gradient(#8bc06a,#5f9a49);opacity:0;transform:scale(.4);transform-origin:top center;box-shadow:inset -4px -4px 8px rgba(0,0,0,.15)}
+.chrysalis6:before{content:"";position:absolute;top:-14px;left:50%;width:2px;height:14px;background:#6b4423;transform:translateX(-50%)}
+.chrysalis6.show{animation:pupaPop .8s ease forwards, sway 2.4s ease-in-out 1s infinite}
+@keyframes pupaPop{0%{opacity:0;transform:scale(.3)}70%{opacity:1;transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}
+@keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.pupate-btn{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);border:0;padding:9px 16px;border-radius:14px;background:#6d4aff;color:#fff;font-weight:800;cursor:pointer;font-size:14px}
+.pupate-btn.hide{display:none}
+.pupa-note{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-size:13px;font-weight:700;color:#8a5a2b;opacity:0}
+.pupa-note.show{animation:fadeIn .6s ease forwards .5s}
+@media(max-width:650px){.scene6{padding:16px}.pupa-card{padding:20px}.pupa-art{height:160px}.branch{top:30px}.cat6{top:38px}.chrysalis6{top:36px}}
+
+.scene7{display:none;position:fixed;inset:0;background:linear-gradient(135deg,#fff9e8,#e9f7ff);padding:28px;overflow:auto;z-index:90}
+.scene7.show{display:block;animation:fadeIn .45s ease}
+.emerge-wrap{max-width:920px;margin:0 auto}
+.emerge-card{background:#fff;border-radius:24px;padding:28px;box-shadow:0 16px 45px rgba(40,80,120,.14)}
+.emerge-title{text-align:center}.emerge-title h2{margin:8px 0 5px}.emerge-title p{margin:0;color:#667085}
+.emerge-art{height:190px;margin:18px 0;border-radius:20px;background:linear-gradient(#cfeeff 0 60%,#9bd47c 60%);position:relative;overflow:hidden}
+.chrysalis7{position:absolute;top:36px;left:47%;width:34px;height:62px;border-radius:45% 45% 40% 40%/55% 55% 45% 45%;background:linear-gradient(#8bc06a,#5f9a49);transition:opacity .5s ease, transform .5s ease}
+.chrysalis7:before{content:"";position:absolute;top:-14px;left:50%;width:2px;height:14px;background:#6b4423;transform:translateX(-50%)}
+.chrysalis7.crack:after{content:"";position:absolute;top:38%;left:8%;width:84%;height:2px;background:#3f5c30;transform:rotate(-4deg)}
+.chrysalis7.hide{opacity:0;transform:scale(.5)}
+.butterfly7{position:absolute;top:44px;left:44%;font-size:26px;opacity:0;transform:scale(.5);transition:opacity .5s ease, transform .8s ease, font-size .8s ease, top .8s ease}
+.butterfly7.show{opacity:1;transform:scale(1)}
+.butterfly7.dry{font-size:60px;top:65px;left:40%;animation:float 2.6s ease-in-out infinite}
+.emerge-btn{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);border:0;padding:9px 16px;border-radius:14px;background:#6d4aff;color:#fff;font-weight:800;cursor:pointer;font-size:14px}
+.emerge-btn.hide{display:none}
+.emerge-note{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-size:13px;font-weight:700;color:#397a9c;opacity:0}
+.emerge-note.show{animation:fadeIn .6s ease forwards .3s}
+.final-panel{display:none;text-align:center;margin-top:16px;padding:18px;border-radius:18px;background:linear-gradient(135deg,#fff7e0,#eafff0);border:2px solid #ffe3a3}
+.final-panel.show{display:block;animation:pop .4s ease}
+.final-panel div{font-size:38px}
+.final-panel strong{font-size:20px;color:#8a5a2b}
+.final-panel p{margin:6px 0 14px;color:#556}
+.restart-btn{border:0;padding:12px 20px;border-radius:14px;background:#e07a2c;color:#fff;font-weight:800;cursor:pointer;font-size:15px}
+@media(max-width:650px){.scene7{padding:16px}.emerge-card{padding:20px}.emerge-art{height:160px}.chrysalis7{top:30px}.butterfly7{top:38px}.butterfly7.dry{top:55px}}
+</style>
+</head>
+<body>
+<div class="scene">
+  <div class="sun"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="hill h1"></div>
+  <div class="hill h2"></div>
+  <div class="ground"></div>
+  <div class="grass"></div>
+
+  <div class="title">
+    <div class="tag">🦋 BUTTERFLY LIFE MISSION</div>
+    <h1>ภารกิจชีวิตของผีเสื้อ</h1>
+    <p>ฉากที่ 1 • เริ่มต้นการเดินทางของผีเสื้อ</p>
+  </div>
+
+  <div class="badge">🌿 สวนดอกไม้</div>
+
+  <div class="flower f1">🌷</div>
+  <div class="flower f2">🌼</div>
+  <div class="flower f3">🌸</div>
+  <div class="flower f4">🌻</div>
+
+  <div class="leaf l1"></div>
+  <div class="leaf l2"></div>
+
+  <svg id="route" class="route" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <path id="routePath" d="M 22 48 C 30 30, 40 65, 50 48 S 70 30, 78 50"></path>
+  </svg>
+
+  <div id="goal" class="goal">💕 จุดหมาย</div>
+  <div id="maleButterfly" class="butterfly boy draggable" title="ลากผีเสื้อตัวผู้ตามเส้นทาง">🦋</div>
+  <div id="femaleButterfly" class="butterfly girl" title="ผีเสื้อตัวเมีย">🦋</div>
+
+  <div id="missionPanel" class="mission-panel">
+    <strong>🦋 ช่วยผีเสื้อตัวผู้ตามหาคู่</strong>
+    <p>ลาก 🦋 ตัวผู้ตามเส้นทางไปหาผีเสื้อตัวเมีย</p>
+    <div class="progress"><span id="progressBar"></span></div>
+  </div>
+
+  <div id="successPanel" class="success-panel">
+    <div>🎉💕</div>
+    <strong>พบคู่แล้ว!</strong>
+    <p>ผีเสื้อทั้งสองพบกันสำเร็จ</p>
+    <button id="nextBtn">ไปขั้นตอนต่อไป →</button>
+  </div>
+</div>
+<div id="scene2" class="scene2">
+  <div class="repro-wrap">
+    <div class="repro-card">
+      <div class="repro-title">
+        <div class="tag">🦋 SCENE 2 • REPRODUCTION</div>
+        <h2>การผสมพันธุ์</h2>
+        <p>เรียนรู้ขั้นตอนการสืบพันธุ์ของผีเสื้อ</p>
+      </div>
+
+      <div class="mini-animation" aria-label="ภาพประกอบการพบกันของผีเสื้อ">
+        <div class="butterfly-icon">🦋</div><div class="arrow">→</div><div class="butterfly-icon">🦋</div>
+      </div>
+
+      <div class="bio-box">
+        <strong>📚 ความรู้</strong>
+        <p>ในการผสมพันธุ์ อสุจิจากตัวผู้จะถูกถ่ายไปยังตัวเมีย เพื่อให้เกิดการปฏิสนธิและนำไปสู่การสร้างตัวอ่อน</p>
+      </div>
+
+      <div class="choice-title">🎯 เลือกข้อความที่อธิบายการผสมพันธุ์ได้ถูกต้อง</div>
+      <div class="choices" id="reproChoices">
+        <button class="choice" data-correct="true"><span class="mark">✓</span>อสุจิจากตัวผู้ถูกถ่ายไปยังตัวเมีย</button>
+        <button class="choice" data-correct="false"><span class="mark">✗</span>ไข่จากตัวเมียถูกถ่ายไปยังตัวผู้</button>
+        <button class="choice" data-correct="false"><span class="mark">✗</span>ตัวอ่อนเกิดขึ้นทันทีที่ผีเสื้อพบกัน</button>
+        <button class="choice" data-correct="false"><span class="mark">✗</span>ผีเสื้อตัวผู้วางไข่หลังจากพบตัวเมีย</button>
+      </div>
+      <div id="reproFeedback" class="feedback"></div>
+      <button id="toEggScene" class="continue-btn">ไปขั้นตอนต่อไป: การวางไข่ →</button>
+    </div>
+  </div>
+</div>
+
+
+<div id="scene3" class="scene3">
+  <div class="egg-wrap">
+    <div class="egg-card">
+      <div class="egg-title">
+        <div class="tag">🦋 SCENE 3 • EGG LAYING</div>
+        <h2>การวางไข่</h2>
+        <p>หลังจากผสมพันธุ์ ผีเสื้อตัวเมียจะวางไข่เพื่อเริ่มต้นรุ่นใหม่</p>
+      </div>
+      <div class="egg-scene-art">
+        <div class="leaf-art">🌿</div>
+        <div class="butterfly-art">🦋</div>
+        <div class="egg-cluster" id="eggCluster">🥚🥚🥚</div>
+      </div>
+      <div class="egg-info"><strong>📚 ความรู้</strong><p>ผีเสื้อตัวเมียจะวางไข่บนพืชที่เหมาะสม เพราะเมื่อไข่ฟัก ตัวหนอนจะมีอาหารสำหรับเจริญเติบโต</p></div>
+      <div class="choice-title">🎯 ควรวางไข่บริเวณใดจึงเหมาะสมที่สุด?</div>
+      <div class="choices egg-choices" id="eggChoices">
+        <button class="choice" data-correct="true"><span class="mark">✓</span>บนใบพืชที่ตัวหนอนสามารถกินเป็นอาหารได้</button>
+        <button class="choice" data-correct="false"><span class="mark">✗</span>บนพื้นดินที่ไม่มีพืช</button>
+        <button class="choice" data-correct="false"><span class="mark">✗</span>บนก้อนหินที่ไม่มีอาหารของตัวหนอน</button>
+        <button class="choice" data-correct="false"><span class="mark">✗</span>กลางอากาศโดยไม่เกาะสิ่งใด</button>
+      </div>
+      <div id="eggFeedback" class="feedback"></div>
+      <button id="eggNext" class="continue-btn">ไปขั้นตอนต่อไป: ไข่ฟักเป็นหนอน →</button>
+    </div>
+  </div>
+</div>
+
+<div id="scene4" class="scene4"><div class="larva-wrap"><div class="larva-card"><div class="larva-title"><div class="tag">🦋 SCENE 4 • HATCHING</div><h2>ไข่ฟักเป็นหนอน</h2><p>เมื่อไข่พัฒนาเต็มที่ ตัวหนอนจะฟักออกมา</p></div><div class="hatch-art"><div class="plant">🌿</div><div id="egg4" class="egg4">🥚</div><div id="caterpillar4" class="caterpillar4">🐛</div></div><div class="larva-info"><strong>📚 ความรู้</strong><p>เมื่อเอ็มบริโอภายในไข่เจริญเติบโตเต็มที่ ไข่จะฟักออกและกลายเป็นตัวหนอน ซึ่งเป็นระยะที่เริ่มกินอาหารและเจริญเติบโต</p></div><div class="choice-title">🎯 หลังจากไข่ฟัก สิ่งมีชีวิตที่ออกมาคืออะไร?</div><div class="choices" id="hatchChoices"><button class="choice" data-correct="true"><span class="mark">✓</span>ตัวหนอน 🐛</button><button class="choice" data-correct="false"><span class="mark">✗</span>ดักแด้</button><button class="choice" data-correct="false"><span class="mark">✗</span>ผีเสื้อตัวเต็มวัย</button><button class="choice" data-correct="false"><span class="mark">✗</span>ไข่ใบใหม่</button></div><div id="hatchFeedback" class="feedback"></div><button id="hatchNext" class="continue-btn">ไปขั้นตอนต่อไป: ตัวหนอนกินอาหาร →</button></div></div></div>
+
+<div id="scene5" class="scene5"><div class="feed-wrap"><div class="feed-card">
+  <div class="feed-title"><div class="tag">🦋 SCENE 5 • FEEDING</div><h2>ตัวหนอนกินอาหาร</h2><p>ป้อนใบไม้ให้ตัวหนอนเพื่อให้มันเติบโตแข็งแรง</p></div>
+  <div class="feed-art">
+    <div class="feed-plant">🌿</div>
+    <button class="leaf-btn lb1" data-leaf="1">🍃</button>
+    <button class="leaf-btn lb2" data-leaf="2">🍃</button>
+    <button class="leaf-btn lb3" data-leaf="3">🍃</button>
+    <div id="cat5" class="cat5" style="--sc:1;transform:scale(1)">🐛</div>
+    <div id="fullBadge" class="full-badge" style="display:none">😋 อิ่มแล้ว!</div>
+  </div>
+  <div class="feed-progress-wrap"><div class="label"><span>ความอิ่ม</span><span id="feedPct">0%</span></div><div class="progress"><span id="feedBar"></span></div></div>
+  <div class="larva-info"><strong>📚 ความรู้</strong><p>ตัวหนอนใช้เวลาส่วนใหญ่ในการกินใบไม้ตลอดวัน เพื่อสะสมพลังงานและสารอาหารสำหรับการเจริญเติบโตและการลอกคราบ ก่อนจะเข้าสู่ระยะดักแด้ในที่สุด</p></div>
+  <div id="feedQuiz" class="feed-quiz">
+    <div class="choice-title">🎯 ทำไมตัวหนอนต้องกินอาหารเยอะมาก?</div>
+    <div class="choices" id="feedChoices">
+      <button class="choice" data-correct="true"><span class="mark">✓</span>เพื่อสะสมพลังงานไว้เติบโตและลอกคราบ</button>
+      <button class="choice" data-correct="false"><span class="mark">✗</span>เพื่อให้บินได้เร็วขึ้น</button>
+      <button class="choice" data-correct="false"><span class="mark">✗</span>เพื่อเปลี่ยนสีปีกผีเสื้อ</button>
+      <button class="choice" data-correct="false"><span class="mark">✗</span>ไม่มีเหตุผล ตัวหนอนกินเล่นเฉยๆ</button>
+    </div>
+    <div id="feedFeedback" class="feedback"></div>
+    <div id="feedDone" style="display:none;text-align:center;font-weight:800;color:#397a32;margin-top:8px">🎉 เก่งมาก! ตัวหนอนอิ่มและพร้อมเติบโตต่อไป</div>
+    <button id="feedNext" class="continue-btn">ไปขั้นตอนต่อไป: ตัวหนอนเข้าดักแด้ →</button>
+  </div>
+</div></div></div>
+
+<div id="scene6" class="scene6"><div class="pupa-wrap"><div class="pupa-card">
+  <div class="pupa-title"><div class="tag">🦋 SCENE 6 • PUPATION</div><h2>ตัวหนอนเข้าดักแด้</h2><p>เมื่อโตเต็มที่ ตัวหนอนจะหยุดกินและเปลี่ยนร่างเป็นดักแด้</p></div>
+  <div class="pupa-art">
+    <div class="branch"></div>
+    <div id="cat6" class="cat6">🐛</div>
+    <div id="chrysalis6" class="chrysalis6"></div>
+    <button id="pupateBtn" class="pupate-btn">🔽 กดเพื่อเข้าดักแด้</button>
+    <div id="pupaNote" class="pupa-note">🧵 ตัวหนอนพันปลอกไหมยึดตัวเองไว้กับกิ่งไม้</div>
+  </div>
+  <div class="larva-info"><strong>📚 ความรู้</strong><p>เมื่อตัวหนอนโตเต็มที่ มันจะหยุดกินอาหาร ยึดตัวเองกับกิ่งไม้ด้วยเส้นใยไหม แล้วลอกคราบครั้งสุดท้ายกลายเป็นดักแด้ ภายในดักแด้ ร่างกายของตัวหนอนจะสลายและจัดเรียงใหม่เป็นโครงสร้างของผีเสื้อ</p></div>
+  <div id="pupaQuiz" class="feed-quiz">
+    <div class="choice-title">🎯 ภายในดักแด้เกิดการเปลี่ยนแปลงอย่างไร?</div>
+    <div class="choices" id="pupaChoices">
+      <button class="choice" data-correct="true"><span class="mark">✓</span>ร่างกายของตัวหนอนสลายและจัดเรียงใหม่เป็นโครงสร้างผีเสื้อ</button>
+      <button class="choice" data-correct="false"><span class="mark">✗</span>ตัวหนอนหลับพักโดยไม่มีการเปลี่ยนแปลงใดๆ</button>
+      <button class="choice" data-correct="false"><span class="mark">✗</span>ตัวหนอนวางไข่อยู่ภายในดักแด้</button>
+      <button class="choice" data-correct="false"><span class="mark">✗</span>ตัวหนอนแค่ตัวใหญ่ขึ้นโดยรูปร่างเหมือนเดิม</button>
+    </div>
+    <div id="pupaFeedback" class="feedback"></div>
+    <div id="pupaDone" style="display:none;text-align:center;font-weight:800;color:#397a32;margin-top:8px">🎉 เยี่ยมมาก! อีกไม่นานผีเสื้อจะออกจากดักแด้</div>
+    <button id="pupaNext" class="continue-btn">ไปขั้นตอนต่อไป: ผีเสื้อออกจากดักแด้ →</button>
+  </div>
+</div></div></div>
+
+<div id="scene7" class="scene7"><div class="emerge-wrap"><div class="emerge-card">
+  <div class="emerge-title"><div class="tag">🦋 SCENE 7 • EMERGENCE</div><h2>ผีเสื้อออกจากดักแด้</h2><p>ผีเสื้อตัวเต็มวัยฟักออกจากดักแด้และรอให้ปีกกางออก</p></div>
+  <div class="emerge-art">
+    <div id="chrysalis7" class="chrysalis7"></div>
+    <div id="butterfly7" class="butterfly7">🦋</div>
+    <button id="emergeBtn" class="emerge-btn">🐣 ผีเสื้อออกจากดักแด้</button>
+    <div id="emergeNote" class="emerge-note">💧 ปีกยังเปียกและยับ กำลังสูบของเหลวเข้าเส้นปีกให้กางออก...</div>
+  </div>
+  <div class="larva-info"><strong>📚 ความรู้</strong><p>เมื่อออกจากดักแด้ ผีเสื้อจะมีปีกที่เปียก ยับ และมีขนาดเล็ก มันต้องสูบของเหลวในร่างกาย (ฮีโมลิมฟ์) เข้าไปในเส้นปีกเพื่อขยายปีกให้เต็มที่ แล้วรอให้ปีกแห้งแข็งก่อนจึงจะบินได้</p></div>
+  <div id="emergeQuiz" class="feed-quiz">
+    <div class="choice-title">🎯 ทำไมผีเสื้อที่เพิ่งออกจากดักแด้จึงบินไม่ได้ทันที?</div>
+    <div class="choices" id="emergeChoices">
+      <button class="choice" data-correct="true"><span class="mark">✓</span>ปีกยังเปียกและยับ ต้องรอให้ขยายและแห้งก่อน</button>
+      <button class="choice" data-correct="false"><span class="mark">✗</span>เพราะมันยังไม่หิวอาหาร</button>
+      <button class="choice" data-correct="false"><span class="mark">✗</span>เพราะมันกลัวแสงแดด</button>
+      <button class="choice" data-correct="false"><span class="mark">✗</span>เพราะขาทั้งหกข้างยังไม่ครบ</button>
+    </div>
+    <div id="emergeFeedback" class="feedback"></div>
+    <div id="finalPanel" class="final-panel">
+      <div>🎉🦋🎉</div>
+      <strong>ครบวงจรชีวิตของผีเสื้อแล้ว!</strong>
+      <p>ไข่ → ตัวหนอน → ดักแด้ → ผีเสื้อตัวเต็มวัย ที่พร้อมผสมพันธุ์และเริ่มวงจรใหม่อีกครั้ง</p>
+      <button id="restartBtn" class="restart-btn">🔁 เริ่มภารกิจใหม่อีกครั้ง</button>
+    </div>
+  </div>
+</div></div></div>
+<script>
+(function(){
+  const male = document.getElementById('maleButterfly');
+  const female = document.getElementById('femaleButterfly');
+  const progress = document.getElementById('progressBar');
+  const success = document.getElementById('successPanel');
+  const goal = document.getElementById('goal');
+
+  let dragging = false;
+  let startX = 0, startY = 0;
+  let startLeft = 0, startTop = 0;
+  let traveled = 0;
+  let finished = false;
+
+  function pointerPos(e){
+    return {x:e.clientX, y:e.clientY};
+  }
+
+  male.addEventListener('pointerdown', function(e){
+    if(finished) return;
+    dragging = true;
+    male.classList.add('dragging');
+    male.setPointerCapture(e.pointerId);
+    const r = male.getBoundingClientRect();
+    startX = e.clientX;
+    startY = e.clientY;
+    startLeft = r.left;
+    startTop = r.top;
+    e.preventDefault();
+  });
+
+  male.addEventListener('pointermove', function(e){
+    if(!dragging || finished) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    const scene = document.querySelector('.scene').getBoundingClientRect();
+
+    let left = startLeft + dx - scene.left;
+    let top = startTop + dy - scene.top;
+
+    left = Math.max(5, Math.min(scene.width - male.offsetWidth - 5, left));
+    top = Math.max(90, Math.min(scene.height - male.offsetHeight - 80, top));
+
+    male.style.left = left + 'px';
+    male.style.top = top + 'px';
+
+    traveled += Math.sqrt(dx*dx + dy*dy) * .08;
+    const pct = Math.min(100, traveled);
+    progress.style.width = pct + '%';
+
+    const a = male.getBoundingClientRect();
+    const b = female.getBoundingClientRect();
+    const ax = a.left+a.width/2, ay = a.top+a.height/2;
+    const bx = b.left+b.width/2, by = b.top+b.height/2;
+    const distance = Math.hypot(ax-bx, ay-by);
+
+    if(distance < 105){
+      finish();
+    }
+  });
+
+  function stop(e){
+    if(!dragging) return;
+    dragging = false;
+    male.classList.remove('dragging');
+    try{ male.releasePointerCapture(e.pointerId); }catch(_){}
+  }
+  male.addEventListener('pointerup', stop);
+  male.addEventListener('pointercancel', stop);
+
+  function finish(){
+    if(finished) return;
+    finished = true;
+    dragging = false;
+    male.classList.remove('dragging');
+    const a = female.getBoundingClientRect();
+    const scene = document.querySelector('.scene').getBoundingClientRect();
+    male.style.left = (a.left - scene.left - 28) + 'px';
+    male.style.top = (a.top - scene.top + 8) + 'px';
+    progress.style.width = '100%';
+    goal.style.display = 'none';
+    success.classList.add('show');
+  }
+
+  // Scene 2: reproduction quiz
+  const nextBtn = document.getElementById('nextBtn');
+  const scene1 = document.querySelector('.scene');
+  const scene2 = document.getElementById('scene2');
+  const choices = document.querySelectorAll('#reproChoices .choice');
+  const feedback = document.getElementById('reproFeedback');
+  const toEggScene = document.getElementById('toEggScene');
+  const scene3 = document.getElementById('scene3');
+  const eggChoices = document.querySelectorAll('#eggChoices .choice');
+  const eggFeedback = document.getElementById('eggFeedback');
+  const eggNext = document.getElementById('eggNext');
+  const eggCluster = document.getElementById('eggCluster');
+  const scene4 = document.getElementById('scene4');
+  const hatchChoices = document.querySelectorAll('#hatchChoices .choice');
+  const hatchFeedback = document.getElementById('hatchFeedback');
+  const hatchNext = document.getElementById('hatchNext');
+  const egg4 = document.getElementById('egg4');
+  const caterpillar4 = document.getElementById('caterpillar4');
+
+  nextBtn.addEventListener('click', function(){
+    scene1.style.display = 'none';
+    scene2.classList.add('show');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  choices.forEach(function(choice){
+    choice.addEventListener('click', function(){
+      if(toEggScene.classList.contains('show')) return;
+      choices.forEach(function(c){ c.classList.remove('correct','wrong'); });
+      const correct = choice.dataset.correct === 'true';
+      choice.classList.add(correct ? 'correct' : 'wrong');
+      if(correct){
+        feedback.textContent = '✓ ถูกต้อง! อสุจิจากตัวผู้ถูกถ่ายไปยังตัวเมีย';
+        feedback.className = 'feedback ok';
+        toEggScene.classList.add('show');
+      }else{
+        feedback.textContent = '✗ ยังไม่ถูก ลองเลือกใหม่อีกครั้ง';
+        feedback.className = 'feedback bad';
+      }
+    });
+  });
+
+  toEggScene.addEventListener('click', function(){
+    scene2.classList.remove('show');
+    scene3.classList.add('show');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  eggChoices.forEach(function(choice){
+    choice.addEventListener('click', function(){
+      eggChoices.forEach(function(c){ c.classList.remove('correct','wrong'); });
+      const correct = choice.dataset.correct === 'true';
+      choice.classList.add(correct ? 'correct' : 'wrong');
+      if(correct){
+        eggFeedback.textContent = '✓ ถูกต้อง! ตัวเมียวางไข่บนพืชที่เหมาะสมกับตัวหนอน';
+        eggFeedback.className = 'feedback ok';
+        eggCluster.classList.add('show');
+        eggNext.classList.add('show');
+      }else{
+        eggFeedback.textContent = '✗ ยังไม่ถูก ลองเลือกใหม่อีกครั้ง';
+        eggFeedback.className = 'feedback bad';
+      }
+    });
+  });
+
+  eggNext.addEventListener('click', function(){ scene3.classList.remove('show'); scene4.classList.add('show'); window.scrollTo({top:0,behavior:'smooth'}); });
+
+  hatchChoices.forEach(function(choice){ choice.addEventListener('click', function(){ hatchChoices.forEach(function(c){c.classList.remove('correct','wrong')}); const ok=choice.dataset.correct==='true'; choice.classList.add(ok?'correct':'wrong'); if(ok){ hatchFeedback.textContent='✓ ถูกต้อง! ไข่ฟักออกมาเป็นตัวหนอน'; hatchFeedback.className='feedback ok'; egg4.classList.add('hatch'); caterpillar4.classList.add('show'); hatchNext.classList.add('show'); } else { hatchFeedback.textContent='✗ ยังไม่ถูก ลองเลือกใหม่อีกครั้ง'; hatchFeedback.className='feedback bad'; } }); });
+
+  // Scene 5: feeding the caterpillar
+  const scene5 = document.getElementById('scene5');
+  hatchNext.addEventListener('click', function(){ scene4.classList.remove('show'); scene5.classList.add('show'); window.scrollTo({top:0,behavior:'smooth'}); });
+
+  const leafBtns = document.querySelectorAll('.leaf-btn');
+  const cat5 = document.getElementById('cat5');
+  const feedBar = document.getElementById('feedBar');
+  const feedPct = document.getElementById('feedPct');
+  const fullBadge = document.getElementById('fullBadge');
+  const feedQuiz = document.getElementById('feedQuiz');
+  const feedChoices = document.querySelectorAll('#feedChoices .choice');
+  const feedFeedback = document.getElementById('feedFeedback');
+  const feedDone = document.getElementById('feedDone');
+  const NEEDED = 6;
+  let eaten = 0;
+
+  leafBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if(btn.disabled) return;
+      eaten++;
+      btn.disabled = true;
+      setTimeout(function(){ if(eaten < NEEDED) btn.disabled = false; }, 1400);
+      const scale = (1 + eaten * 0.12).toFixed(2);
+      cat5.style.setProperty('--sc', scale);
+      cat5.style.transform = 'scale(' + scale + ')';
+      const curLeft = parseFloat(getComputedStyle(cat5).left) || 0;
+      cat5.classList.remove('eat'); void cat5.offsetWidth; cat5.classList.add('eat');
+      const pct = Math.min(100, Math.round(eaten / NEEDED * 100));
+      feedBar.style.width = pct + '%';
+      feedPct.textContent = pct + '%';
+      if(eaten >= NEEDED){
+        leafBtns.forEach(function(b){ b.disabled = true; });
+        fullBadge.style.display = 'block';
+        feedQuiz.classList.add('show');
+      }
+    });
+  });
+
+  feedChoices.forEach(function(choice){
+    choice.addEventListener('click', function(){
+      if(feedDone.style.display === 'block') return;
+      feedChoices.forEach(function(c){ c.classList.remove('correct','wrong'); });
+      const ok = choice.dataset.correct === 'true';
+      choice.classList.add(ok ? 'correct' : 'wrong');
+      if(ok){
+        feedFeedback.textContent = '✓ ถูกต้อง!';
+        feedFeedback.className = 'feedback ok';
+        feedDone.style.display = 'block';
+        feedNext.classList.add('show');
+      }else{
+        feedFeedback.textContent = '✗ ยังไม่ถูก ลองเลือกใหม่อีกครั้ง';
+        feedFeedback.className = 'feedback bad';
+      }
+    });
+  });
+
+  // Scene 6: pupation
+  const scene6 = document.getElementById('scene6');
+  const feedNext = document.getElementById('feedNext');
+  feedNext.addEventListener('click', function(){ scene5.classList.remove('show'); scene6.classList.add('show'); window.scrollTo({top:0,behavior:'smooth'}); });
+
+  const pupateBtn = document.getElementById('pupateBtn');
+  const cat6 = document.getElementById('cat6');
+  const chrysalis6 = document.getElementById('chrysalis6');
+  const pupaNote = document.getElementById('pupaNote');
+  const pupaQuiz = document.getElementById('pupaQuiz');
+  const pupaChoices = document.querySelectorAll('#pupaChoices .choice');
+  const pupaFeedback = document.getElementById('pupaFeedback');
+  const pupaDone = document.getElementById('pupaDone');
+
+  pupateBtn.addEventListener('click', function(){
+    cat6.classList.add('hide');
+    chrysalis6.classList.add('show');
+    pupateBtn.classList.add('hide');
+    pupaNote.classList.add('show');
+    setTimeout(function(){ pupaQuiz.classList.add('show'); }, 900);
+  });
+
+  pupaChoices.forEach(function(choice){
+    choice.addEventListener('click', function(){
+      if(pupaDone.style.display === 'block') return;
+      pupaChoices.forEach(function(c){ c.classList.remove('correct','wrong'); });
+      const ok = choice.dataset.correct === 'true';
+      choice.classList.add(ok ? 'correct' : 'wrong');
+      if(ok){
+        pupaFeedback.textContent = '✓ ถูกต้อง!';
+        pupaFeedback.className = 'feedback ok';
+        pupaDone.style.display = 'block';
+        pupaNext.classList.add('show');
+      }else{
+        pupaFeedback.textContent = '✗ ยังไม่ถูก ลองเลือกใหม่อีกครั้ง';
+        pupaFeedback.className = 'feedback bad';
+      }
+    });
+  });
+
+  // Scene 7: emergence
+  const scene7 = document.getElementById('scene7');
+  const pupaNext = document.getElementById('pupaNext');
+  pupaNext.addEventListener('click', function(){ scene6.classList.remove('show'); scene7.classList.add('show'); window.scrollTo({top:0,behavior:'smooth'}); });
+
+  const emergeBtn = document.getElementById('emergeBtn');
+  const chrysalis7 = document.getElementById('chrysalis7');
+  const butterfly7 = document.getElementById('butterfly7');
+  const emergeNote = document.getElementById('emergeNote');
+  const emergeQuiz = document.getElementById('emergeQuiz');
+  const emergeChoices = document.querySelectorAll('#emergeChoices .choice');
+  const emergeFeedback = document.getElementById('emergeFeedback');
+  const finalPanel = document.getElementById('finalPanel');
+  const restartBtn = document.getElementById('restartBtn');
+
+  emergeBtn.addEventListener('click', function(){
+    chrysalis7.classList.add('crack');
+    emergeBtn.classList.add('hide');
+    setTimeout(function(){
+      chrysalis7.classList.add('hide');
+      butterfly7.classList.add('show');
+      emergeNote.classList.add('show');
+    }, 350);
+    setTimeout(function(){
+      butterfly7.classList.add('dry');
+    }, 1000);
+    setTimeout(function(){
+      emergeQuiz.classList.add('show');
+    }, 2000);
+  });
+
+  emergeChoices.forEach(function(choice){
+    choice.addEventListener('click', function(){
+      if(finalPanel.classList.contains('show')) return;
+      emergeChoices.forEach(function(c){ c.classList.remove('correct','wrong'); });
+      const ok = choice.dataset.correct === 'true';
+      choice.classList.add(ok ? 'correct' : 'wrong');
+      if(ok){
+        emergeFeedback.textContent = '✓ ถูกต้อง!';
+        emergeFeedback.className = 'feedback ok';
+        finalPanel.classList.add('show');
+      }else{
+        emergeFeedback.textContent = '✗ ยังไม่ถูก ลองเลือกใหม่อีกครั้ง';
+        emergeFeedback.className = 'feedback bad';
+      }
+    });
+  });
+
+  restartBtn.addEventListener('click', function(){ window.scrollTo({top:0,behavior:'smooth'}); location.reload(); });
+})();
+</script>
+
+
+</body>
+</html>
